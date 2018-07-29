@@ -1,11 +1,14 @@
 package memcacher
 
 import (
+	"bufio"
 	"bytes"
 	"compress/gzip"
 
 	"github.com/bradfitz/gomemcache/memcache"
 )
+
+var prefix = "mycache."
 
 // Memcacher defines the basic methods
 // of caching
@@ -44,14 +47,14 @@ func (m *Memcached) Set(suffix string, val interface{}) (bool, error) {
 	var e error
 	var key string
 	if m.isCompressed {
-		key = "mycache." + ".c." + suffix
+		key = prefix + ".c." + suffix
 		e = m.client.Set(&memcache.Item{
 			Key:        key,
 			Value:      gzcompress(val.(string)),
 			Expiration: 0,
 		})
 	} else {
-		key = "mycache." + suffix
+		key = prefix + suffix
 		e = m.client.Set(&memcache.Item{
 			Key:        key,
 			Value:      []byte(val.(string)),
@@ -80,4 +83,34 @@ func gzcompress(val string) []byte {
 		return []byte("")
 	}
 	return b.Bytes()
+}
+
+func gzuncompress(b []byte) (string, error) {
+	bb := bytes.NewBuffer(b)
+	zipread, _ := gzip.NewReader(bb)
+
+	defer zipread.Close()
+	reader := bufio.NewReader(zipread)
+
+	var (
+		part []byte
+		err  error
+	)
+	ret := ""
+
+	for {
+		if part, _, err = reader.ReadLine(); err != nil {
+			break
+		}
+
+		ret += string(part)
+
+	}
+	return ret, nil
+
+}
+
+// GetVal returns the value of cache
+func GetVal(key string, mem Memcacher) (interface{}, error) {
+	return mem.Get(key)
 }
