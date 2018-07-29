@@ -86,6 +86,21 @@ func (m *Memcached) Get(suffix string) (interface{}, error) {
 	return string(it.Value), nil
 }
 
+func (m *Memcached) Delete(suffix string) (bool, error) {
+	key := prefix + suffix
+	if m.isCompressed {
+		key = prefix + ".c." + suffix
+	}
+
+	e := m.client.Delete(key)
+
+	if e != nil {
+		return false, e
+	}
+
+	return true, nil
+}
+
 func gzcompress(val string) []byte {
 	var b bytes.Buffer
 
