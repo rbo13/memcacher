@@ -47,7 +47,7 @@ func (m *Memcached) Set(suffix string, val interface{}) (bool, error) {
 		key = "mycache." + ".c." + suffix
 		e = m.client.Set(&memcache.Item{
 			Key:        key,
-			Value:      m.gzcompress(val.(string)),
+			Value:      gzcompress(val.(string)),
 			Expiration: 0,
 		})
 	} else {
@@ -65,7 +65,7 @@ func (m *Memcached) Set(suffix string, val interface{}) (bool, error) {
 	return true, nil
 }
 
-func (m Memcached) gzcompress(val string) []byte {
+func gzcompress(val string) []byte {
 	var b bytes.Buffer
 
 	gz := gzip.NewWriter(&b)
