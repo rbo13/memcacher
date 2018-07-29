@@ -68,6 +68,24 @@ func (m *Memcached) Set(suffix string, val interface{}) (bool, error) {
 	return true, nil
 }
 
+func (m *Memcached) Get(suffix string) (interface{}, error) {
+	var key string
+	if m.isCompressed {
+		key = prefix + ".c." + suffix
+	} else {
+		key = prefix + suffix
+	}
+
+	it, err := m.client.Get(key)
+	if err != nil {
+		return "", err
+	}
+	if m.isCompressed {
+		return gzuncompress(it.Value)
+	}
+	return string(it.Value), nil
+}
+
 func gzcompress(val string) []byte {
 	var b bytes.Buffer
 
