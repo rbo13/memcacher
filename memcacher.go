@@ -29,7 +29,7 @@ type Memcached struct {
 }
 
 // NewMemcached constructor for our concrete
-// imlementation of memcacher
+// implementation of memcacher
 func NewMemcached(host, port, server string) *Memcached {
 	return &Memcached{
 		memcachedHost:   host,
