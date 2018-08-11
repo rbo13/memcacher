@@ -18,8 +18,10 @@ func NewMemcachier(server, username, password string) *Memcachier {
 	}
 }
 
-// Set sets a value to the cache
-// using the specified `key`
+// Set returns a boolean value
+// after setting a value using
+// the specified `key`, returns
+// error otherwise.
 func (memcachier *Memcachier) Set(key string, data interface{}) (bool, error) {
 	c := mc.NewMC(memcachier.server, memcachier.username, memcachier.password)
 	defer c.Quit()
@@ -33,7 +35,7 @@ func (memcachier *Memcachier) Set(key string, data interface{}) (bool, error) {
 }
 
 // Get returns the `data` saved in cache
-// using the specified `key`
+// using the specified `key`.
 func (memcachier *Memcachier) Get(key string) (interface{}, error) {
 	c := mc.NewMC(memcachier.server, memcachier.username, memcachier.password)
 	defer c.Quit()
