@@ -46,7 +46,10 @@ func (memcachier *Memcachier) Get(key string) (interface{}, error) {
 	return val, nil
 }
 
-// Delete ...
+// Delete returns a boolean value
+// if there is a successful deletion
+// using the specified `key`,
+// returns error otherwise.
 func (memcachier *Memcachier) Delete(key string) (bool, error) {
 	c := mc.NewMC(memcachier.server, memcachier.username, memcachier.password)
 	defer c.Quit()
