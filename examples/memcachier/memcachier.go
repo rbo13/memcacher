@@ -30,3 +30,16 @@ func (memcachier *Memcachier) Set(key string, data interface{}) (bool, error) {
 
 	return true, nil
 }
+
+// Get ...
+func (memcachier *Memcachier) Get(key string) (interface{}, error) {
+	c := mc.NewMC(memcachier.server, memcachier.username, memcachier.password)
+	defer c.Quit()
+
+	val, _, _, err := c.Get(key)
+
+	if err != nil {
+		return nil, err
+	}
+	return val, nil
+}
