@@ -10,11 +10,17 @@ import (
 
 const key = "myKey"
 
+var c *memcachier.Memcachier
+
 type UserContainer struct {
 	Name     string
 	Age      int
 	Address  string
 	Birthday time.Time
+}
+
+func init() {
+	c = memcachier.NewMemcachier(memcachier.Config{Server: "localhost:11211", Username: "", Password: ""})
 }
 
 func TestSetMemcachier(t *testing.T) {
@@ -31,10 +37,6 @@ func TestSetMemcachier(t *testing.T) {
 		time.Now(),
 	}
 
-	var userContainer UserContainer
-
-	memcachier := memcachier.NewMemcachier(memcachier.Config{Server: "localhost:11211", Username: "", Password: ""})
-
 	out, err := json.Marshal(user)
 
 	if err != nil {
@@ -42,14 +44,18 @@ func TestSetMemcachier(t *testing.T) {
 		t.Fail()
 	}
 
-	ok, err := memcachier.Set(key, string(out))
+	ok, err := c.Set(key, string(out))
 
 	if err != nil && ok == false {
 		t.Errorf("Error: %v", err)
 		t.Fail()
 	}
 
-	val, err := memcachier.Get(key)
+}
+
+func TestGetMemcachier(t *testing.T) {
+	var userContainer UserContainer
+	val, err := c.Get(key)
 
 	if err != nil {
 		t.Errorf("Error: %v", err)
@@ -64,5 +70,4 @@ func TestSetMemcachier(t *testing.T) {
 	}
 
 	t.Log(userContainer)
-
 }
