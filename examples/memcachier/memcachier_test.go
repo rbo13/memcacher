@@ -33,7 +33,7 @@ func TestSetMemcachier(t *testing.T) {
 
 	var userContainer UserContainer
 
-	memcachier := memcachier.NewMemcachier("localhost:11211", "", "")
+	memcachier := memcachier.NewMemcachier(memcachier.Config{Server: "localhost:11211", Username: "", Password: ""})
 
 	out, err := json.Marshal(user)
 
@@ -63,6 +63,6 @@ func TestSetMemcachier(t *testing.T) {
 		t.Fail()
 	}
 
-	t.Log(userContainer.Name)
+	t.Log(userContainer)
 
 }
