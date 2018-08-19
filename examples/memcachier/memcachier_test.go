@@ -71,3 +71,16 @@ func TestGetMemcachier(t *testing.T) {
 
 	t.Log(userContainer)
 }
+
+func TestDeleteMemcachier(t *testing.T) {
+	ok, err := c.Delete(key)
+
+	if err != nil {
+		t.Errorf("Error due to: %v", err)
+	}
+
+	if !ok {
+		t.Error("Failed to Delete item from cache")
+	}
+
+}
