@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/whaangbuu/memcacher/examples/memcachier"
+	"github.com/rbo13/memcacher/examples/memcachier"
 )
 
 const key = "myKey"
